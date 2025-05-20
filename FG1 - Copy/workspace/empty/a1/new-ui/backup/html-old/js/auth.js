@@ -1,0 +1,156 @@
+// API base URL - update this to your FastAPI server address
+const API_BASE_URL = 'http://localhost:8000';
+
+// DOM Elements - Login/Register Cards
+const loginCard = document.getElementById('loginCard');
+const registerCard = document.getElementById('registerCard');
+const twofaCard = document.getElementById('twofaCard');
+const twofaSetupSection = document.getElementById('twofaSetupSection');
+const twofaVerifySection = document.getElementById('twofaVerifySection');
+
+// DOM Elements - Login
+const loginUsername = document.getElementById('loginUsername');
+const loginPassword = document.getElementById('loginPassword');
+const loginBtn = document.getElementById('loginBtn');
+const loginMessage = document.getElementById('loginMessage');
+
+// DOM Elements - Register
+const registerName = document.getElementById('registerName');
+const registerUsername = document.getElementById('registerUsername');
+const registerPassword = document.getElementById('registerPassword');
+const confirmPassword = document.getElementById('confirmPassword');
+const registerBtn = document.getElementById('registerBtn');
+const registerMessage = document.getElementById('registerMessage');
+
+// DOM Elements - 2FA
+const qrCodeContainer = document.getElementById('qrCodeContainer');
+const twofaSetupCode = document.getElementById('twofaSetupCode');
+const twofaVerifyCode = document.getElementById('twofaVerifyCode');
+const setupTwofaBtn = document.getElementById('setupTwofaBtn');
+const skipTwofaBtn = document.getElementById('skipTwofaBtn');
+const verifyTwofaBtn = document.getElementById('verifyTwofaBtn');
+const twofaMessage = document.getElementById('twofaMessage');
+
+// Card switchers
+const showRegisterBtn = document.getElementById('showRegisterBtn');
+const showLoginBtn = document.getElementById('showLoginBtn');
+
+// Initialize the Molecule Auth Presenter for reactive state management
+const { stateFlow: authState, processor: authProcessor } = Molecule.AuthPresenter.create();
+
+// Initialize the application
+document.addEventListener('DOMContentLoaded', () => {
+    // Check if already authenticated
+    const token = localStorage.getItem('bankAuthToken');
+    
+    if (token) {
+        // Verify token validity
+        verifyTokenAndRedirect(token);
+    }
+    
+    // Set up event listeners
+    setupEventListeners();
+    
+    // Connect the UI to our reactive state
+    setupReactiveUI();
+});
+
+// Set up all event listeners
+function setupEventListeners() {
+    // Card switching
+    showRegisterBtn.addEventListener('click', showRegisterCard);
+    showLoginBtn.addEventListener('click', showLoginCard);
+    
+    // Login/Register actions
+    loginBtn.addEventListener('click', handleLogin);
+    registerBtn.addEventListener('click', handleRegister);
+    
+    // 2FA actions
+    setupTwofaBtn.addEventListener('click', setup2FA);
+    skipTwofaBtn.addEventListener('click', skip2FA);
+    verifyTwofaBtn.addEventListener('click', verify2FA);
+}
+
+// Card switching functions
+function showRegisterCard() {
+    loginCard.style.display = 'none';
+    registerCard.style.display = 'block';
+    twofaCard.style.display = 'none';
+}
+
+function showLoginCard() {
+    loginCard.style.display = 'block';
+    registerCard.style.display = 'none';
+    twofaCard.style.display = 'none';
+}
+
+// Set up reactive UI with Molecule
+function setupReactiveUI() {
+    console.debug('[Auth Debug] Setting up reactive UI');
+    Molecule.connectView(authState, (state) => {
+        console.debug('[Auth Debug] State updated:', state);
+        
+        // Update UI based on authentication state changes
+        
+        // Handle view changes
+        if (state.currentView === 'login') {
+            loginCard.style.display = 'block';
+            registerCard.style.display = 'none';
+            twofaCard.style.display = 'none';
+        } else if (state.currentView === 'register') {
+            loginCard.style.display = 'none';
+            registerCard.style.display = 'block';
+            twofaCard.style.display = 'none';
+        } else if (state.currentView === 'twofa-setup' || state.currentView === 'twofa-verify') {
+            loginCard.style.display = 'none';
+            registerCard.style.display = 'none';
+            twofaCard.style.display = 'block';
+            
+            if (state.currentView === 'twofa-setup') {
+                twofaSetupSection.style.display = 'block';
+                twofaVerifySection.style.display = 'none';
+            } else {
+                twofaSetupSection.style.display = 'none';
+                twofaVerifySection.style.display = 'block';
+            }
+        }
+        
+        // Handle error messages
+        if (state.error) {
+            switch (state.currentView) {
+                case 'login':
+                    loginMessage.innerHTML = `<div class="alert alert-danger">${state.error}</div>`;
+                    break;
+                case 'register':
+                    registerMessage.innerHTML = `<div class="alert alert-danger">${state.error}</div>`;
+                    break;
+                case 'twofa-setup':
+                case 'twofa-verify':
+                    twofaMessage.innerHTML = `<div class="alert alert-danger">${state.error}</div>`;
+                    break;
+            }
+        }
+        
+        // Handle loading state
+        if (state.isLoading) {
+            switch (state.currentView) {
+                case 'login':
+                    loginMessage.innerHTML = '<div class="alert alert-info">Logging in...</div>';
+                    break;
+                case 'register':
+                    registerMessage.innerHTML = '<div class="alert alert-info">Creating your account...</div>';
+                    break;
+                case 'twofa-setup':
+                case 'twofa-verify':
+                    twofaMessage.innerHTML = '<div class="alert alert-info">Processing...</div>';
+                    break;
+            }
+        }
+        
+        // If authenticated, redirect to account page
+        if (state.isAuthenticated && state.authToken) {
+            localStorage.setItem('bankAuthToken', state.authToken);
+            window.location.href = 'account.html';
+        }
+    }, 'AuthView');
+}

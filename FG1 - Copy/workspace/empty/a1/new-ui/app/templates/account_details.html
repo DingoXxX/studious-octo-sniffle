@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bank Account Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .bank-card {
+            background: linear-gradient(135deg, #172a74, #21a9af);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .bank-logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .account-number {
+            font-family: monospace;
+            font-size: 18px;
+            letter-spacing: 2px;
+            margin: 10px 0;
+        }
+        .account-holder {
+            margin-top: 30px;
+            font-size: 16px;
+        }
+        .balance {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .transactions {
+            margin-top: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .positive {
+            color: green;
+        }
+        .negative {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bank Account Details</h1>
+        
+        <div class="bank-card">
+            <div class="bank-logo">FastAPI Bank</div>
+            <div class="account-holder">{{user_name}}</div>
+            <div class="account-number">Routing: {{routing_number}}</div>
+            <div class="account-number">Account: {{account_number}}</div>
+            <div class="balance">${{balance}}</div>
+        </div>
+        
+        <div class="transactions">
+            <h2>Recent Transactions</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in transactions %}
+                    <tr>
+                        <td>{{transaction.timestamp.strftime('%Y-%m-%d %H:%M')}}</td>
+                        <td>{% if transaction.amount > 0 %}Deposit{% else %}Withdrawal{% endif %}</td>
+                        <td class="{% if transaction.amount > 0 %}positive{% else %}negative{% endif %}">
+                            ${{transaction.amount}}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

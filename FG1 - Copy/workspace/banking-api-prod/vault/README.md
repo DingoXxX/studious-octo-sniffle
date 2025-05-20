@@ -1,0 +1,1 @@
+# Placeholder for HashiCorp Vault integration scripts

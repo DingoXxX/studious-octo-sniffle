@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <!-- basic -->
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <!-- mobile metas -->
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+      <!-- site metas -->
+      <title>My Bank Account</title>
+      <meta name="keywords" content="">
+      <meta name="description" content="">
+      <meta name="author" content="">
+      <!-- bootstrap css -->
+      <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">      <!-- style css -->
+      <link rel="stylesheet" type="text/css" href="css/style.css">
+      <!-- Responsive-->
+      <link rel="stylesheet" href="css/responsive.css">
+      <!-- Offline Styles -->
+      <link rel="stylesheet" href="css/offline.css">
+      <!-- fevicon -->
+      <link rel="icon" href="images/fevicon.png" type="image/gif" />
+      <!-- font css -->
+      <link href="https://fonts.googleapis.com/css?family=Poppins:400,700,800|Raleway:400,600,700,800&display=swap" rel="stylesheet">      <!-- Scrollbar Custom CSS -->
+      <link rel="stylesheet" href="css/jquery.mCustomScrollbar.min.css">
+      <!-- Tweaks for older IEs-->
+      <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+      <!-- PWA Support -->      <link rel="manifest" href="/manifest.json">
+      <meta name="theme-color" content="#172a74">
+      <link rel="apple-touch-icon" href="images/logo.png">
+      <style>
+         .account-section {
+            padding: 50px 0;
+            background-color: #f8f9fa;
+         }
+         .account-card {
+            background: linear-gradient(135deg, #172a74, #21a9af);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+         }
+         .account-details {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+         }
+         .account-number {
+            font-family: monospace;
+            font-size: 18px;
+            letter-spacing: 2px;
+            margin: 10px 0;
+         }
+         .balance {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 20px 0;
+         }
+         .transaction-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+         }
+         .transaction-table th, .transaction-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+         }
+         .transaction-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+         }
+         .positive {
+            color: #02a763;
+            font-weight: bold;
+         }
+         .negative {
+            color: #dc3545;
+            font-weight: bold;
+         }
+         .action-buttons .btn {
+            margin-right: 10px;
+            margin-bottom: 10px;
+         }
+         .deposit-form {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+            display: none;
+         }
+         .form-control {
+            margin-bottom: 15px;
+         }
+         .error-message {
+            color: #dc3545;
+            margin-top: 5px;
+            font-size: 14px;
+         }
+         .success-message {
+            color: #02a763;
+            margin-top: 5px;
+            font-size: 14px;
+         }
+      </style>
+   </head>
+   <body>
+      <div class="header_section">
+         <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+               <a class="navbar-brand" href="index.html"><img src="images/logo.png"></a>
+               <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+               <span class="navbar-toggler-icon"></span>
+               </button>
+               <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                  <ul class="navbar-nav ml-auto">
+                     <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="services.html">Services</a>
+                     </li>
+                     <li class="nav-item active">
+                        <a class="nav-link" href="account.html">My Account</a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                     </li>
+                  </ul>
+               </div>
+            </nav>
+         </div>
+      </div>      <!-- Account section start -->
+      <div class="account-section">
+         <div class="container">
+            <div class="row">
+               <div class="col-md-12">
+                  <h1 class="text-center mb-5">My Bank Account</h1>
+                  <!-- Offline Indicator -->
+                  <div class="offline-indicator">
+                    <span class="offline-icon"></span> You are currently offline. Some features may not be available.
+                  </div>
+               </div>
+            </div>
+              <!-- Account details section -->
+            <div class="row" id="accountDetailsSection">
+               <div class="col-md-12">
+                  <div class="account-card">
+                     <div class="row">
+                        <div class="col-md-8">
+                           <h2 id="accountHolder">Welcome, <span id="userName-display"></span></h2>
+                           <div class="account-number">Routing: <span id="routing-number"></span></div>
+                           <div class="account-number">Account: <span id="account-number"></span></div>
+                        </div>
+                        <div class="col-md-4 text-right">
+                           <div class="balance">$<span id="account-balance">0.00</span></div>
+                        </div>
+                     </div>
+                  </div>
+                  
+                  <div class="account-details">                  <div class="action-buttons">
+                        <button id="showDepositFormBtn" class="btn btn-success">Make a Deposit</button>
+                        <button id="refreshBtn" class="btn btn-info">Refresh Data</button>
+                        <button id="logoutBtn" class="btn btn-outline-danger float-right">Log Out</button>
+                     </div>
+                     
+                     <!-- Deposit form -->
+                     <div id="depositForm" class="deposit-form">
+                        <h4>Make a Deposit</h4>
+                        <div class="form-group">
+                           <label for="depositAmount">Amount (USD):</label>
+                           <input type="number" class="form-control" id="depositAmount" min="0.01" step="0.01" placeholder="Enter amount">
+                        </div>
+                        <button id="submitDepositBtn" class="btn btn-primary">Submit Deposit</button>
+                        <button id="cancelDepositBtn" class="btn btn-secondary">Cancel</button>
+                        <div id="depositMessage" class="mt-3"></div>
+                     </div>
+                     
+                     <!-- Transaction history -->
+                     <div class="mt-4">
+                        <h3>Transaction History</h3>
+                        <div class="table-responsive">
+                           <table class="transaction-table">
+                              <thead>
+                                 <tr>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>Amount</th>
+                                 </tr>
+                              </thead>
+                              <tbody id="transaction-list">
+                                 <!-- Transaction rows will be added here by JavaScript -->
+                              </tbody>
+                           </table>
+                        </div>
+                        <div id="noTransactions" class="text-center mt-4" style="display:none;">
+                           <p>No transactions to display.</p>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- Account section end -->
+
+      <!-- footer section start -->
+      <div class="footer_section layout_padding">
+         <div class="container">
+            <div class="footer_section_2">
+               <div class="row">
+                  <div class="col-lg-3 col-sm-6">
+                     <h2 class="useful_text">Digital Money</h2>
+                     <p class="footer_text">Your Trusted Banking Partner</p>
+                  </div>
+                  <div class="col-lg-3 col-sm-6">
+                     <h2 class="useful_text">Quick Links</h2>
+                     <div class="footer_menu">
+                        <ul>
+                           <li><a href="index.html">Home</a></li>
+                           <li><a href="services.html">Services</a></li>
+                           <li><a href="account.html">My Account</a></li>
+                           <li><a href="contact.html">Contact Us</a></li>
+                        </ul>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- footer section end -->      <!-- JavaScript files -->
+      <script src="js/jquery-3.0.0.min.js"></script>
+      <script src="js/bootstrap.min.js"></script>
+      <script src="js/popper.min.js"></script>
+      <script src="js/custom.js"></script>
+        <!-- Molecule & App JavaScript -->
+      <script src="js/molecule.js"></script>
+      <script src="js/auth.js"></script>
+      <script src="js/account.js"></script>
+      
+      <!-- PWA Service Worker Registration -->      <script>
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+              .then(registration => {
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+              })
+              .catch(error => {
+                console.log('ServiceWorker registration failed: ', error);
+              });
+          });
+        }
+      </script>
+   </body>
+</html>

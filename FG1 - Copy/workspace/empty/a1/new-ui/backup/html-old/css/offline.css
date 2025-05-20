@@ -1,0 +1,75 @@
+/* PWA - Offline styles */
+body.offline {
+    background-color: #f8f9fa;
+}
+
+body.offline::before {
+    content: "You are offline. Some features may be limited.";
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #ffc107;
+    color: #212529;
+    text-align: center;
+    padding: 5px;
+    z-index: 9999;
+    font-size: 14px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+body.offline form[action^="http"] {
+    position: relative;
+}
+
+body.offline form[action^="http"]::after {
+    content: "This feature requires an internet connection";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.offline-indicator {
+    display: none;
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+}
+
+body.offline .offline-indicator {
+    display: block;
+}
+
+/* Add an icon for offline content */
+.offline-icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 5px;
+    background-color: #dc3545;
+    border-radius: 50%;
+    position: relative;
+}
+
+.offline-icon::before {
+    content: "!";
+    position: absolute;
+    left: 6px;
+    top: 0;
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+}
